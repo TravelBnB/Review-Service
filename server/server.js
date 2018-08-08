@@ -14,12 +14,11 @@ app.use(express.static(path.join(__dirname, '/../client/dist')));
 // app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/api/listing/:listingid/overview', (req, res) => {
-  const listing_id = Number(req.params.listingid);
-  console.log(listing_id);
-  let ratingsObj = {};
-  
+  const listingId = Number(req.params.listingid);
+  console.log(listingId);
+  const ratingsObj = {};
 
-  db.getRatings(listing_id, function(err, results) {
+  db.getRatings(listingId, (err, results) => {
     if (err) {
       console.log('err in server - overview: ', err)
       return;
@@ -62,10 +61,10 @@ app.get('/api/listing/:listingid/overview', (req, res) => {
 });
 
 app.get('/api/listing/:listingid/reviews', (req, res) => {
-  const listing_id = Number(req.params.listingid);
-  console.log(listing_id);
+  const listingId = Number(req.params.listingid);
+  console.log(listingId);
 
-  db.getReviews(listing_id, function(err, results) {
+  db.getReviews(listingId, function(err, results) {
     if (err) {
       console.log('err in server - reviews: ', err)
       return;
@@ -74,6 +73,7 @@ app.get('/api/listing/:listingid/reviews', (req, res) => {
     res.status(200).json(results);
   });
 });
+
 
 app.listen(3002, console.log('Listening on port 3002'));
 

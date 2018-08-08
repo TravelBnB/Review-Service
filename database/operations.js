@@ -1,23 +1,21 @@
-var db = require('./config.js');
+const db = require('./config.js');
 
-const getRatings = (listing_id, whenRatings) => {
+const getRatings = (listingId, whenRatings) => {
   const qs = `SELECT accuracy, communication, cleanliness, location, check_in, _value \
-              FROM reviews WHERE listing_id = ${listing_id}`;
+              FROM reviews WHERE listing_id = ${listingId}`;
 
   db.query(qs, whenRatings);
-}
+};
 
-const getReviews = (listing_id, whenReviews) => {
+const getReviews = (listingId, whenReviews) => {
   const qs = `select users.name, users.photo, reviews._date, reviews.content, reviews.is_reported \
               FROM users JOIN reviews \
-              WHERE reviews.listing_id = ${listing_id} AND users.id = reviews.user_id
+              WHERE reviews.listing_id = ${listingId} AND users.id = reviews.user_id
               ORDER BY reviews._date DESC`;
 
-  db.query(qs, whenReviews); 
-}
+  db.query(qs, whenReviews);
+};
 
 module.exports = {
-  getRatings: getRatings,
-  getReviews: getReviews
-}
-
+  getRatings, getReviews,
+};
