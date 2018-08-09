@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../database/operations.js');
+const faker = require('faker');
 
 const app = express();
 
@@ -18,46 +19,23 @@ app.get('/api/listing/:listingid/overview', (req, res) => {
   console.log(listingId);
   const ratingsObj = {};
 
-  db.getRatings(listingId, (err, results) => {
-    if (err) {
-      console.log('err in server - overview: ', err)
-      return;
-    }
+  const values = {};
+  let accuracy =  Math.round(1 + Math.random() * 7) / 2;
+  let communication = Math.round(1 + Math.random() * 7) / 2;;
+  let cleanliness = Math.round(1 + Math.random() * 7) / 2;;
+  let location = Math.round(1 + Math.random() * 7) / 2;;
+  let checkIn = Math.round(1 + Math.random() * 7) / 2;;
+  let value = Math.round(1 + Math.random() * 7) / 2;;
+  values.accuracy = accuracy;
+  values.communication = communication;
+  values.cleanliness = cleanliness;
+  values.location = location;
+  values.checkIn = checkIn;
+  values._value = value;
+  values.avg = (values.accuracy + values.communication + values.cleanliness + values.location + values.checkIn + values._value) / 6;
+  console.log(values);
 
-    ratingsObj.total = results.length;
-    ratingsObj.accuracy = Math.round((Math.random() * (4 - 1) + 1) * 2)/2;
-    ratingsObj.communication = Math.round((Math.random() * (4 - 1) + 1) * 2)/2;
-    ratingsObj.cleanliness = Math.round((Math.random() * (4 - 1) + 1) * 2)/2;
-    ratingsObj.location = Math.round((Math.random() * (4 - 1) + 1) * 2)/2;
-    ratingsObj.check_in = Math.round((Math.random() * (4 - 1) + 1) * 2)/2;
-    ratingsObj._value = Math.round((Math.random() * (4 - 1) + 1) * 2)/2;
-    ratingsObj.avg = Math.round(((ratingsObj.accuracy + ratingsObj.communication + ratingsObj.cleanliness + ratingsObj.location + ratingsObj.check_in + ratingsObj._value) / 6) * 2) /2; 
-    // results.forEach(function(ratings) {
-    //   ratingsObj.avg += ratings.accuracy;
-    //   ratingsObj.accuracy += ratings.accuracy;
-    //   ratingsObj.avg += ratings.communication;
-    //   ratingsObj.communication += ratings.communication;
-    //   ratingsObj.avg += ratings.cleanliness;
-    //   ratingsObj.cleanliness += ratings.cleanliness;
-    //   ratingsObj.avg += ratings.location;
-    //   ratingsObj.location += ratings.location;
-    //   ratingsObj.avg += ratings.check_in;
-    //   ratingsObj.check_in += ratings.check_in;
-    //   ratingsObj.avg += ratings._value;
-    //   ratingsObj._value += ratings._value;
-    //   console.log(ratings.accuracy);
-    // });
-
-    // ratingsObj.avg = Math.round((ratingsObj.avg/ (results.length * 6)) * 2) / 2;
-    // ratingsObj.accuracy = Math.round((ratingsObj.accuracy / results.length) * 2) / 2;
-    // ratingsObj.communication = Math.round((ratingsObj.communication / results.length) * 2) / 2;
-    // ratingsObj.cleanliness = Math.round((ratingsObj.cleanliness / results.length) * 2) / 2;
-    // ratingsObj.location = Math.round((ratingsObj.location / results.length) * 2) / 2;
-    // ratingsObj.check_in = Math.round((ratingsObj.check_in / results.length) * 2) / 2;
-    // ratingsObj._value = Math.round((ratingsObj._value / results.length) * 2) / 2;
-
-    res.status(200).json(ratingsObj);
-  });
+  res.status(200).json(values);
 });
 
 app.get('/api/listing/:listingid/reviews', (req, res) => {
@@ -74,6 +52,40 @@ app.get('/api/listing/:listingid/reviews', (req, res) => {
   });
 });
 
+app.post('/api/reviews/:listingid', (req, res) => {
+  const listingId = Number(req.params.listingid);
+  console.log(req.body);
+  const reqData = req.body;
+  var rightNow = faker.date.past().toISOString()  ; 
+  reqData._date = rightNow.slice(0, 10) + ' ' + rightNow.slice(11, 19);
+  db.postReview(listingId, reqData, (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    res.status(200).json(results);
+  });
+});
+
+app.put('/api/reviews/:listingid', (req, res) => {
+  db.updateReview(req.body, (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    res.status(200).json(results);
+  })
+});
+
+app.delete('/api/listing/:listingid', (req, res) => {
+  db.deleteListing(Number(req.params.listingid), (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    res.status(200).json('Delete successfully');
+  })
+})
 
 app.listen(3002, console.log('Listening on port 3002'));
 
