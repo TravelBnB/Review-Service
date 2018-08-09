@@ -37,3 +37,21 @@ npm install -g webpack
 npm install
 ```
 
+## API
+### get request
+```
+/api/listing/:listingid/reviews
+```
+### post request
+```
+/api/reviews/:listingid {user_id: INT NOT NULL, content: text}
+```
+### update request
+```
+/api/reviews/:listingid {user_id: INT NOT NULL, content: text}
+```
+### delete request
+```
+/api/listing/:listingid
+```
+
