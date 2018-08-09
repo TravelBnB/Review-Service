@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const db = require('../database/operations.js');
+const faker = require('faker');
 
 const app = express();
 
@@ -18,37 +19,23 @@ app.get('/api/listing/:listingid/overview', (req, res) => {
   console.log(listingId);
   const ratingsObj = {};
 
-  db.getRatings(listingId, (err, results) => {
-    if (err) {
-      console.log('err in server - overview: ', err);
-      return;
-    }
-    const values = {};
-    let accuracy = 0;
-    let communication = 0;
-    let cleanliness = 0;
-    let location = 0;
-    let checkIn = 0;
-    let _value = 0;
-    results.map((row) => {
-      accuracy += row.accuracy;
-      communication += row.communication;
-      cleanliness += row.cleanliness;
-      location += row.location;
-      checkIn += row.check_in;
-      _value += row._value;
-    });
-    values.accuracy = Math.round(accuracy / results.length);
-    values.communication = Math.round(communication / results.length);
-    values.cleanliness = Math.round(cleanliness / results.length);
-    values.location = Math.round(location / results.length);
-    values.checkIn = Math.round(checkIn / results.length);
-    values._value = Math.round(_value / results.length);
-    values.avg = (values.accuracy + values.communication + values.cleanliness + values.location + values.checkIn + values._value) / 6;
-    console.log(values);
+  const values = {};
+  let accuracy =  Math.round(1 + Math.random() * 7) / 2;
+  let communication = Math.round(1 + Math.random() * 7) / 2;;
+  let cleanliness = Math.round(1 + Math.random() * 7) / 2;;
+  let location = Math.round(1 + Math.random() * 7) / 2;;
+  let checkIn = Math.round(1 + Math.random() * 7) / 2;;
+  let value = Math.round(1 + Math.random() * 7) / 2;;
+  values.accuracy = accuracy;
+  values.communication = communication;
+  values.cleanliness = cleanliness;
+  values.location = location;
+  values.checkIn = checkIn;
+  values._value = value;
+  values.avg = (values.accuracy + values.communication + values.cleanliness + values.location + values.checkIn + values._value) / 6;
+  console.log(values);
 
-    res.status(200).json(values);
-  });
+  res.status(200).json(values);
 });
 
 app.get('/api/listing/:listingid/reviews', (req, res) => {
@@ -65,10 +52,40 @@ app.get('/api/listing/:listingid/reviews', (req, res) => {
   });
 });
 
-// app.post('/api/listing/:listingid/reviews', (req, res) => {
-//   const listingId = Number(req.params.listingid);
-  
-// })
+app.post('/api/reviews/:listingid', (req, res) => {
+  const listingId = Number(req.params.listingid);
+  console.log(req.body);
+  const reqData = req.body;
+  var rightNow = faker.date.past().toISOString()  ; 
+  reqData._date = rightNow.slice(0, 10) + ' ' + rightNow.slice(11, 19);
+  db.postReview(listingId, reqData, (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    res.status(200).json(results);
+  });
+});
+
+app.put('/api/reviews/:listingid', (req, res) => {
+  db.updateReview(req.body, (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    res.status(200).json(results);
+  })
+});
+
+app.delete('/api/listing/:listingid', (req, res) => {
+  db.deleteListing(Number(req.params.listingid), (err, results) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    res.status(200).json('Delete successfully');
+  })
+})
 
 app.listen(3002, console.log('Listening on port 3002'));
 

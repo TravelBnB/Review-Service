@@ -9,6 +9,7 @@ const DateGen = require('random-date-generator');
 
 const loremIpsum = require('lorem-ipsum');
 const db = require('./database/config.js');
+const faker = require('faker');
 
 const getPhotos = () => {
   var origUrls = [];
@@ -431,21 +432,12 @@ const getRating = () => {
 }
 
 const getDate = () => {
-  let start = new Date (2011, 1, 1);
-  let end = new Date ();
-
-  var randoDate = DateGen.getRandomDateInRange(start, end);
-  return randoDate.toISOString().slice(0, 19).replace('T', ' ');
+  let rightNow = faker.date.past().toISOString();
+  return rightNow.slice(0, 10) + ' ' + rightNow.slice(11, 19);
 };
 
 const getReview = () => {
     let returnObj = {};
-    returnObj.accuracy = getRating();
-    returnObj.communication = getRating();
-    returnObj.cleanliness = getRating();
-    returnObj.location = getRating();
-    returnObj.check_in = getRating();
-    returnObj._value = getRating();
     returnObj.date = getDate();
     returnObj._content = getContent();
 
@@ -478,10 +470,7 @@ const insertReviews = () => {
       review.listing_id = listing_id;
       review.user_id = user;
 
-      qs = `INSERT INTO reviews (listing_id, user_id, accuracy, communication, cleanliness, location, check_in, \
-            _value, _date, content) \
-            VALUES ("${review.listing_id}", "${review.user_id}", "${review.accuracy}", "${review.communication}", \
-             "${review.cleanliness}", "${review.location}", "${review.check_in}", "${review._value}", "${review.date}", "${review._content}")`;
+      qs = `INSERT INTO reviews (listing_id, user_id, _date, content) VALUES ("${review.listing_id}", "${review.user_id}", "${review.date}", "${review._content}")`;
       db.query(qs, function(err) {
           if(err) {
               console.log(err);

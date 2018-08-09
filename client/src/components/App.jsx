@@ -6,6 +6,7 @@ import ReviewList from './ReviewList.jsx';
 import Overview from './Overview.jsx';
 import CSSModules from 'react-css-modules';
 import styles from './app.css';
+import $ from 'jquery';
 
 class App extends React.Component {
   constructor(props) {
@@ -26,6 +27,29 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    var listingId = this.state.listing_id;
+    const rightNow = new Date().toISOString();
+    const theDate = rightNow.slice(0, 10) + ' ' + rightNow.slice(11, 19);
+    $.ajax({
+      method: 'POST',
+      url: `http://localhost:3002/api/reviews/${listingId}`,
+      data: {
+        user_id: 1,
+        accuracy: 3,
+        communication: 2,
+        cleanliness: 4,
+        location: 2,
+        check_in: 3,
+        _value: 3,
+        _date: theDate,
+        content: 'This is a new comment that I am inserting in to listing 1.'
+      }
+    }).then((response) => {
+      console.log(response);
+    }, (err) => {
+      console.log(err);
+      return;
+    })
     this.getRatings();
     this.getReviews();
   }
