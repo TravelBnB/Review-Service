@@ -1,2 +1,10 @@
 user_images
 node_modules
+newrelic.js
+cassandra
+server.crt
+server.csr
+server.key
+testing.sql
+newrelic_agent.log
+loaderio-cdff6bee8f549c836e8731be8985ba5f.txt
