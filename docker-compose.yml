@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  reviews:
+    # image: ansonao/travelbnb-reviews:theservice
+    build: .
+    ports:
+      - "3002:3002"
+    depends_on:
+      - 'redis'
+    environment:
+      - REDIS_URL=redis://cache
+
+  redis:
+    image: 'redis:latest'
+    container_name: 'cache'
+    ports:
+      - '6379:6379'
+
+
+  # postgres:
+  #   image: "postgres:latest"
+  #   build: ./database
+  #   container_name: postgres
+  #   ports:
+  #     - '5432:5432'

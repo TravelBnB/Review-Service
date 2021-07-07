@@ -1,17 +1,13 @@
-const db = require('./config.js');
+var db = require('./config.js');
 
-const getRatings = (listingId, whenRatings) => {
-  const qs = `SELECT accuracy, communication, cleanliness, location, check_in, _value \
-              FROM reviews WHERE listing_id = ${listingId}`;
+const getRatings = (listing_id, whenRatings) => {
+  const qs = `SELECT accuracy, communication, cleanliness, location, check_in, _value FROM reviews WHERE listing_id = ${listing_id};`;
 
   db.query(qs, whenRatings);
-};
+}
 
-const getReviews = (listingId, whenReviews) => {
-  const qs = `select users.name, users.photo, reviews._date, reviews.content \
-              FROM users JOIN reviews \
-              WHERE reviews.listing_id = ${listingId} AND users.id = reviews.user_id
-              ORDER BY reviews._date DESC`;
+const getReviews = (listing_id, whenReviews) => {
+  const qs = `select users.name, users.photo, reviews._date, reviews.content FROM users JOIN reviews ON reviews.listing_id = ${listing_id} AND reviews.user_id = users.id ORDER BY reviews._date DESC;`;
 
   db.query(qs, whenReviews);
 };
@@ -24,3 +20,7 @@ const postReview = (listingId, review, callback) => {
 module.exports = {
   getRatings, getReviews, postReview,
 };
+
+// Muli, Nunito, Questrial Cantarell, Yrsa 
+
+// select users.name, users.photo, reviews._date, reviews.content FROM users JOIN reviews ON reviews.listing_id = 9375021 AND reviews.user_id = users.id ORDER BY reviews._date DESC;

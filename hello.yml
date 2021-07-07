@@ -1,0 +1,18 @@
+config:
+  target: 'http://localhost:3002'
+  phases:
+    - duration: 60
+      arrivalRate: 200
+  # variables:
+  #   listingids:
+  #     - [9041323,9096597,9098321,9143110,9228581,9249350,9317400,9331641,9382445,9492231]
+  defaults:
+    headers:
+      x-my-service-auth: '987401838271002188298567'
+scenarios:
+  - flow:
+    # - loop:
+      - get:
+         # url: "/api/listing/{{$loopElement}}/overview"
+         url: '/'
+      # over: listingids

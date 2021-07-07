@@ -27,29 +27,29 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    var listingId = this.state.listing_id;
-    const rightNow = new Date().toISOString();
-    const theDate = rightNow.slice(0, 10) + ' ' + rightNow.slice(11, 19);
-    $.ajax({
-      method: 'POST',
-      url: `http://localhost:3002/api/reviews/${listingId}`,
-      data: {
-        user_id: 1,
-        accuracy: 3,
-        communication: 2,
-        cleanliness: 4,
-        location: 2,
-        check_in: 3,
-        _value: 3,
-        _date: theDate,
-        content: 'This is a new comment that I am inserting in to listing 1.'
-      }
-    }).then((response) => {
-      console.log(response);
-    }, (err) => {
-      console.log(err);
-      return;
-    })
+    // var listingId = this.state.listing_id;
+    // const rightNow = new Date().toISOString();
+    // const theDate = rightNow.slice(0, 10) + ' ' + rightNow.slice(11, 19);
+    // $.ajax({
+    //   method: 'POST',
+    //   url: `http://localhost:3002/api/reviews/${listingId}`,
+    //   data: {
+    //     user_id: 1,
+    //     accuracy: 3,
+    //     communication: 2,
+    //     cleanliness: 4,
+    //     location: 2,
+    //     check_in: 3,
+    //     _value: 3,
+    //     _date: theDate,
+    //     content: 'This is a new comment that I am inserting in to listing 1.'
+    //   }
+    // }).then((response) => {
+    //   console.log(response);
+    // }, (err) => {
+    //   console.log(err);
+    //   return;
+    // })
     this.getRatings();
     this.getReviews();
   }
@@ -68,7 +68,7 @@ class App extends React.Component {
     var listing_id = this.state.listing_id;
     var self = this;
 
-    axios.get(`http://localhost:3002/api/listing/${listing_id}/reviews`)
+    axios.get(`/api/listing/${listing_id}/reviews`)
       .then(function(response) {
         self.setState({allReviews: response.data});
       })
@@ -81,7 +81,7 @@ class App extends React.Component {
     var listing_id = this.state.listing_id;
     var self = this;
 
-    axios.get(`http://localhost:3002/api/listing/${listing_id}/overview`)
+    axios.get(`/api/listing/${listing_id}/overview`)
       .then(function(response) {
         self.setState({ratings: response.data});
       })
